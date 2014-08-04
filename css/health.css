@@ -1,0 +1,74 @@
+body {
+  padding-top: 40px;
+  font-family: "Roboto Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: whitesmoke;
+}
+
+/**
+ * Layout
+ */
+
+.bodylayout {
+  display: table;
+}
+
+.bodylayout > div {
+  padding-top: 25px;
+  float: none;
+  display: table-cell;
+  vertical-align: top;
+}
+
+.live {
+  background-color: white;
+  border-left: 1px solid #ddd;
+}
+
+.left-logo {
+  padding: 0 20% 20% 0;
+}
+
+.grayscale {
+  filter: grayscale(100%); /* Current draft standard */
+  -webkit-filter: grayscale(100%); /* New WebKit */
+  -moz-filter: grayscale(100%);
+  -ms-filter: grayscale(100%); 
+  -o-filter: grayscale(100%); /* Not yet supported in Gecko, Opera or IE */ 
+  filter: gray; /* IE */
+  -webkit-filter: grayscale(1); /* Old WebKit */
+}
+
+
+/**
+ * Charts
+ */
+ 
+.chart { font-size: 10px; font-family: sans-serif; }
+.axis path, .axis line { fill: none; stroke: #000; shape-rendering: crispEdges; }
+.x.axis path { display: none; }
+.y.axis line { stroke: #777; stroke-dasharray: 2,2; }
+.line { fill: none; stroke: #888; stroke-width: 1px; }
+.line:hover { stroke-width: 2px; }
+.pathlabel { visibility: hidden; }
+.line:hover+text {
+  font-size: 12px;
+  visibility: visible;
+  background-color: white;
+}
+
+.legend .description { padding: 0 8px 0 3px; }
+
+/* Network Health */
+
+.network .hashrate_s { stroke: #d9d9d9; }
+.network .hashrate_m { stroke: #969696; }
+.network .hashrate_l { stroke: #bdbdbd; }
+.network .average { stroke-width: 1.5px; stroke: #756bb1; }
+.network .target { stroke-width: 1px; stroke: #74c476; }
+
+/* Production Cost */
+
+.production .moving { stroke: #2ca02c; stroke-width: 1.5px; }
+.production .average { stroke: #1f77b4; stroke-width: 1.5px; }
+.production .btm_cost { stroke: #7f7f7f; }
+
