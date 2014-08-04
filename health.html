@@ -25,7 +25,7 @@
   </head>
 
   <body>
-    <header class="navbar navbar-fixed-top navbar-inverse" role="banner">
+    <!-- header class="navbar navbar-fixed-top navbar-inverse" role="banner">
       <div class="container-fluid">
         <div class="navbar-header">
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
@@ -60,7 +60,7 @@
           </ul>
         </nav>
       </div>
-    </header>
+    </header -->
     <div class="container-fluid">
       <div class="row bodylayout">
         <div class="col-md-2">
@@ -98,6 +98,20 @@
               <span class="description">All Time Average</span>
             </p>
             <div class="productioncost chart"></div>
+          </div>
+          
+          <div class="blocktime">
+            <h1>Block Times</h1>
+            <p>This chart shows the cost to produce 1 <abbr title="Bitmark">BTM</abbr> since genesis, production cost is currently measured in <abbr title="Bitcoin">BTC</abbr>.</p>
+            <p class="legend">
+              <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="btm_cost" /></svg>
+              <span class="description">Real Production Cost</span>
+              <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="moving" /></svg>
+              <span class="description">5 Day Average</span>
+              <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="average" /></svg>
+              <span class="description">All Time Average</span>
+            </p>
+            <div class="blocktimedeviation chart"></div>
           </div>
         </div>
           <div class="col-md-2 live">
@@ -218,7 +232,8 @@ d3.json("data/blocksummary.json", function(error, data) {
 })(d3);
 </script>
 <script>
-/* Historical Network Health Chart */
+(function(){
+/* Production Cost Chart */
 var margin = {top: 20, right: 140, bottom: 30, left: 20},
     width = 1100 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
@@ -332,8 +347,9 @@ d3.json("data/blocksummary.json", function(error, data) {
       .attr("dy", ".35em")
       .text(function(d) { return display_config[d.name].name; });
 });
-
+})();
 </script>
+
   </body>
 </html>
 
