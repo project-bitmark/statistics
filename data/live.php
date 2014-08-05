@@ -54,9 +54,9 @@ function updateCache() {
 		'block_m' => getBlockByHeight($chaindata->generated-HASHRATE_CONSIDERED_BLOCKS_MEDIUM),
 		'block_l' => getBlockByHeight($chaindata->generated-HASHRATE_CONSIDERED_BLOCKS_LONG),
 		'lastchange' => getBlockByHeight(720*floor($chaindata->generated/720)),
-		'hashrate_s' => askDaemon('getnetworkhashps ' . ($chaindata->generated-HASHRATE_CONSIDERED_BLOCKS_SHORT) . ' ' . $chaindata->generated),
-		'hashrate_m' => askDaemon('getnetworkhashps ' . ($chaindata->generated-HASHRATE_CONSIDERED_BLOCKS_MEDIUM) . ' ' . $chaindata->generated),
-		'hashrate_l' => askDaemon('getnetworkhashps ' . ($chaindata->generated-HASHRATE_CONSIDERED_BLOCKS_LONG) . ' ' . $chaindata->generated)
+		'hashrate_s' => askDaemon('getnetworkhashps ' . HASHRATE_CONSIDERED_BLOCKS_SHORT),
+		'hashrate_m' => askDaemon('getnetworkhashps ' . HASHRATE_CONSIDERED_BLOCKS_MEDIUM),
+		'hashrate_l' => askDaemon('getnetworkhashps ' . HASHRATE_CONSIDERED_BLOCKS_LONG)
 	);
 	$chaindata->data = $entry;
 	file_put_contents(STATS_CACHE_FILE, json_encode($chaindata));

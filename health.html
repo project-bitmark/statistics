@@ -12,6 +12,7 @@
 
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>   
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
@@ -22,6 +23,17 @@
     <link rel='stylesheet' id='editor-fonts-css'  href='//fonts.googleapis.com/css?family=Source+Sans+Pro%3A400%2C600%2C700%2C400italic%2C600italic%2C700italic%7CRoboto+Condensed%3A300%2C400%2C700%2C300italic%2C400italic%2C700italic&#038;subset=latin%2Clatin-ext' type='text/css' media='all' />
     
     <link rel="stylesheet" href="css/health.css">
+    <script>
+    	$(document).ready(function() {
+    		
+    		function updateLive() {
+    			$.getJSON( "data/livesummary.json", function( data ) {
+    				console.log(data);
+    			});
+    		}
+    		updateLive();
+    	});
+    </script>
   </head>
 
   <body>
@@ -72,6 +84,22 @@
         
         <div class="col-md-10 primary">
         
+           <div class="realtime">
+            <h1>Live Data</h1>
+            <div class="row">
+              <ul class="list-group col-md-3">
+                <li class="list-group-item"><span class="badge">1,200 MH/s</span> 15 Block Average</li>
+                <li class="list-group-item"><span class="badge">1,300 MH/s</span> 30 Block Average</li>
+                <li class="list-group-item"><span class="badge">1,200 MH/s</span> 60 Block Average</li>
+              </ul>
+              <ul class="list-group col-md-3">
+                <li class="list-group-item"><span class="badge">1,200 MH/s</span> 15 Block Average</li>
+                <li class="list-group-item"><span class="badge">1,300 MH/s</span> 30 Block Average</li>
+                <li class="list-group-item"><span class="badge">1,200 MH/s</span> 60 Block Average</li>
+              </ul>
+            </div>
+          </div>
+                 
           <div class="network">
           <h1>Network Health</h1>
             <p>This chart shows the Health of the Bitmark Network since the genesis block. All measurements are in <abbr title="Megahashes Per Second">MH/s</abbr>, this chart is updated every 60 Blocks - roughly every 2 hours.</p>
@@ -106,8 +134,6 @@
         </div>  
       </div>    
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
     
 <script src="http://d3js.org/d3.v3.js"></script>
 <script>
