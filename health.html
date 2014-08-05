@@ -70,17 +70,18 @@
           </div>
         </div>
         
-        <div class="col-md-8 primary">
+        <div class="col-md-10 primary">
+        
           <div class="network">
           <h1>Network Health</h1>
             <p>This chart shows the Health of the Bitmark Network since the genesis block. All measurements are in <abbr title="Megahashes Per Second">MH/s</abbr>, this chart is updated every 60 Blocks - roughly every 2 hours.</p>
             <p class="legend">
               <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="hashrate_s" /></svg>
-              <span class="description">1 Hour Sample</span>
-              <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="hashrate_m" /></svg>
               <span class="description">2 Hour Sample</span>
-              <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="hashrate_l" /></svg>
+              <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="hashrate_m" /></svg>
               <span class="description">4 Hour Sample</span>
+              <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="hashrate_l" /></svg>
+              <span class="description">8 Hour Sample</span>
               <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="target" /></svg>
               <span class="description">Target Network Hashrate</span>
               <svg height="15" width="25"><line x1="0" y1="9" x2="25" y2="9" class="average" /></svg>
@@ -103,9 +104,6 @@
             <div class="productioncost chart"></div>
           </div>
         </div>  
-        <div class="col-md-2 live">
-          <h2>Live Data</h2>
-        </div>
       </div>    
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
@@ -195,9 +193,9 @@ d3.json("data/blocksummary.json", function(error, data) {
       .text("Network Hashrate (MH/s)");
 
   var display_config = {
-    hashrate_s: { name: "1hr Sample" },
-    hashrate_m: { name: "2hr Sample" },
-    hashrate_l: { name: "4hr Sample" },
+    hashrate_s: { name: "2hr Sample" },
+    hashrate_m: { name: "4hr Sample" },
+    hashrate_l: { name: "8hr Sample" },
     target: { name: "Network Target" },
     average: { name: "Moving Average" },
   };
