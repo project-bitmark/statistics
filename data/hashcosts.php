@@ -57,5 +57,7 @@ function handleSourceError($e) {
 
 function fetchJSON($location) {
 	$context = stream_context_create(array('https' => array('method' => 'GET', 'timeout' => 10)));
-	return json_decode(file_get_contents($location, false, $context), true);
+	$json = @file_get_contents($location, false, $context);
+	if(!$json) throw new Exception();
+	return json_decode($json, true);
 }
