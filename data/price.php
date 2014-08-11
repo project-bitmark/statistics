@@ -4,8 +4,10 @@ define('SAMPLE_CACHE',  dirname(__FILE__) . DIRECTORY_SEPARATOR );
 define('SAMPLE_CACHE_FILENAME', 'sample.json');
 define('SAMPLE_CACHE_FILE', SAMPLE_CACHE . SAMPLE_CACHE_FILENAME);
 
-$file = json_decode(file_get_contents(SAMPLE_CACHE_FILE));
-if(time()-$file->generated < 3600) exit;
+if(file_exists(SAMPLE_CACHE_FILE)) {
+	$file = json_decode(file_get_contents(SAMPLE_CACHE_FILE));
+	if(time()-$file->generated < 3600) exit;
+}
 
 function handleSourceError($e) {
 	return;
