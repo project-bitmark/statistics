@@ -29,18 +29,6 @@ function handleSourceError($e) {
 }
 
 function fetchJSON($location) {
-	$ch = curl_init();
-	
-	curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-	curl_setopt($ch, CURLOPT_FOLLOWLOCATION, TRUE);
-	curl_setopt($ch, CURLOPT_HEADER, FALSE);
-	curl_setopt($ch, CURLOPT_URL, $location);
-	
-	$result = curl_exec($ch);
-	if ($result === false) throw new Exception(curl_error($ch));
-	
-	curl_close($ch);
-	
-	return json_decode($result);
+	$context = stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 10)));
+	return json_decode(file_get_contents($location, false, $context), true);
 }
