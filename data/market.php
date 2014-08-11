@@ -1,6 +1,10 @@
+#!/usr/bin/php
 <?php
+define('PRICE_CACHE',  dirname(__FILE__) . DIRECTORY_SEPARATOR );
+define('PRICE_CACHE_FILENAME', 'marketsamples.json');
+define('PRICE_CACHE_FILE', PRICE_CACHE . PRICE_CACHE_FILENAME);
 
-$sources = array(
+$update = true; $prices = array(); $sources = array(
 	'poloniex' => 'https://poloniex.com/public'	
 );
 
@@ -11,21 +15,23 @@ foreach($sources as $name => $url) {
 			$data = fetchJSON( $url . '?' . http_build_query(array(
 				'command' => 'returnChartData',
 				'currencyPair' => 'BTC_BTM',
-				'start' => time()-(86400*5),
+				'start' => time()-(86400*4),
 				'end' => '9999999999',
 				'period' => '86400'
 			)));
 			break;
 		}
+		foreach($data as $index => $entry) $prices[] = number_format($entry['weightedAverage'], 8, '.', '');
 	} catch(Exception $e) {
 		handleSourceError($e);
+		$update = false;
 	}
-	print_r($data);
-	
 }
 
+if($update) file_put_contents(PRICE_CACHE_FILE, json_encode($prices));
+
 function handleSourceError($e) {
-	print_r($e);
+	return;
 }
 
 function fetchJSON($location) {
