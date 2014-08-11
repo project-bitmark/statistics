@@ -1,7 +1,7 @@
 <?php
 
 $sources = array(
-	'poloniex' => ' https://poloniex.com/public'	
+	'poloniex' => 'https://poloniex.com/public'	
 );
 
 foreach($sources as $name => $url) {
@@ -29,6 +29,6 @@ function handleSourceError($e) {
 }
 
 function fetchJSON($location) {
-	$context = stream_context_create(array('http' => array('method' => 'GET', 'timeout' => 10)));
+	$context = stream_context_create(array('https' => array('method' => 'GET', 'timeout' => 10)));
 	return json_decode(file_get_contents($location, false, $context), true);
 }
