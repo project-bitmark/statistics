@@ -1,4 +1,5 @@
-#!/usr/bin/php<?php
+#!/usr/bin/php
+<?php
 define('HASHCOST_CACHE',  dirname(__FILE__) . DIRECTORY_SEPARATOR );
 define('HASHCOST_CACHE_FILENAME', 'miningsamples.json');
 define('HASHCOST_CACHE_FILE', HASHCOST_CACHE . HASHCOST_CACHE_FILENAME);
