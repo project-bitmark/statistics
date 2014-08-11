@@ -11,8 +11,8 @@ $update = true; $costs = array(); $moving = array();
 $sources = array(
 		'nicehash' => 'https://www.nicehash.com/api?method=stats.global.24h',
 		'mrr' => '0.00064',
-		'lr' => '0.00111385',
-		'tdok' => '0.0011',
+		'lr' => '0.00091',
+#		'tdok' => '0.0011', check this..
 		'br' => '0.000515'
 );
 
