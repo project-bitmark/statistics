@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 define('PRICE_CACHE',  dirname(__FILE__) . DIRECTORY_SEPARATOR );
 define('PRICE_CACHE_FILENAME', 'marketsamples.json');
@@ -29,12 +28,3 @@ foreach($sources as $name => $url) {
 }
 
 if($update) file_put_contents(PRICE_CACHE_FILE, json_encode($prices));
-
-function handleSourceError($e) {
-	return;
-}
-
-function fetchJSON($location) {
-	$context = stream_context_create(array('https' => array('method' => 'GET', 'timeout' => 10)));
-	return json_decode(file_get_contents($location, false, $context), true);
-}

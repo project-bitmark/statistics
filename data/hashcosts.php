@@ -1,4 +1,3 @@
-#!/usr/bin/php
 <?php
 define('HASHCOST_CACHE',  dirname(__FILE__) . DIRECTORY_SEPARATOR );
 define('HASHCOST_CACHE_FILENAME', 'miningsamples.json');
@@ -49,15 +48,4 @@ function getCache() {
 			'data' => array()
 	);
 	return json_decode(file_get_contents(STATS_CACHE_FILE));
-}
-
-function handleSourceError($e) {
-	return;
-}
-
-function fetchJSON($location) {
-	$context = stream_context_create(array('https' => array('method' => 'GET', 'timeout' => 10)));
-	$json = @file_get_contents($location, false, $context);
-	if(!$json) throw new Exception();
-	return json_decode($json, true);
 }
