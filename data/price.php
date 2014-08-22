@@ -23,8 +23,8 @@ function fetchJSON($location) {
 require_once 'hashcosts.php';
 require_once 'market.php';
 
-$prices = json_decode(file_get_contents('marketsamples.json'));
-$costs = json_decode(file_get_contents('miningsamples.json'));
+$prices = json_decode(file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'marketsamples.json'));
+$costs = json_decode(file_get_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'miningsamples.json'));
 $samples = array_merge($prices,$costs);
 
 file_put_contents(SAMPLE_CACHE_FILE, json_encode((object)array(
