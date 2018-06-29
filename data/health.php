@@ -49,7 +49,9 @@ function updateCache() {
 	$chaindata->considered = floor($chaindata->generated/STATS_CONSIDERED_BLOCKS);
 	if($chaindata->considered == $last_considered) return; // no new entries can be generated yet
 	
-	for($i=$last_considered;$i<$chaindata->considered;$i++) {
+	$new = min($last_considered + 100, $chaindata->considered);
+	
+	for($i=$last_considered;$i<$new;$i++) {
 		$start = $i*STATS_CONSIDERED_BLOCKS;			// first block height to consider in entry
 		$end = $start + (STATS_CONSIDERED_BLOCKS-1); 	// last block height to consider in entry
 		$first = getBlockByHeight($start);
