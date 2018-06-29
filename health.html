@@ -157,75 +157,78 @@ var svg = d3.select(".networkhealth").append("svg")
 
 
 var moving_average = 36;
+var d3Inter = function () {
+  d3.json("data/blocksummary.json", function(error, data) {
+    data = data.data;
+    var ac = Array.apply(null, new Array(moving_average)).map(Number.prototype.valueOf,0);
+    data.forEach(function(d,i) {
+      d.date = d.endtime*1000;
+      d.target = ((d.difficulty*4294967296)/120);
+      if(ac.length == moving_average) ac.shift();
+      ac.push(d.hashrate_m);
+      var act = ac.reduce(function(a, b){ return a + b; });
+      d.average = act/moving_average;
+    });
+    color.domain(d3.keys(data[0]).filter(function(key) { return key in {average:0,target:0,hashrate_s:0,hashrate_m:0,hashrate_l:0}; }));
 
-d3.json("data/blocksummary.json", function(error, data) {
-  data = data.data;
-  var ac = Array.apply(null, new Array(moving_average)).map(Number.prototype.valueOf,0);
-  data.forEach(function(d,i) {
-    d.date = d.endtime*1000;
-    d.target = ((d.difficulty*4294967296)/120);
-    if(ac.length == moving_average) ac.shift();
-    ac.push(d.hashrate_m);
-    var act = ac.reduce(function(a, b){ return a + b; });
-    d.average = act/moving_average;
-  });
-  color.domain(d3.keys(data[0]).filter(function(key) { return key in {average:0,target:0,hashrate_s:0,hashrate_m:0,hashrate_l:0}; }));
+    var metrics = color.domain().map(function(name) {
+      return {
+        name: name,
+        values: data.map(function(d) {
+          return {date: d.date, hashrate: Math.floor(+d[name]/1000000)};
+        })
+      };
+    });
 
-  var metrics = color.domain().map(function(name) {
-    return {
-      name: name,
-      values: data.map(function(d) {
-        return {date: d.date, hashrate: Math.floor(+d[name]/1000000)};
-      })
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+
+    y.domain([
+      d3.min(metrics, function(c) { return d3.min(c.values, function(v) { return v.hashrate; }); }),
+      d3.max(metrics, function(c) { return d3.max(c.values, function(v) { return v.hashrate; }); })
+    ]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -16)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Network Hashrate (MH/s)");
+
+    var display_config = {
+      hashrate_s: { name: "2hr Sample" },
+      hashrate_m: { name: "4hr Sample" },
+      hashrate_l: { name: "8hr Sample" },
+      target: { name: "Network Target" },
+      average: { name: "Moving Average" },
     };
+    var metric = svg.selectAll(".metric")
+        .data(metrics)
+        .enter().append("g")
+        .attr("class", "metric");
+
+    metric.append("path")
+        .attr("class", function(d) { return "line " + d.name; })
+        .attr("d", function(d) { return line(d.values); });      
+
+    metric.append("text")
+        .datum(function(d) { return {name: d.name, value: d.values[d.values.length-1]}; })
+        .attr("class", function(d) { return "pathlabel label-" + d.name; } )
+        .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.hashrate) + ")"; })
+        .attr("x", 3)
+        .attr("dy", ".35em")
+        .text(function(d) { return display_config[d.name].name; });
   });
-
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-
-  y.domain([
-    d3.min(metrics, function(c) { return d3.min(c.values, function(v) { return v.hashrate; }); }),
-    d3.max(metrics, function(c) { return d3.max(c.values, function(v) { return v.hashrate; }); })
-  ]);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -16)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Network Hashrate (MH/s)");
-
-  var display_config = {
-    hashrate_s: { name: "2hr Sample" },
-    hashrate_m: { name: "4hr Sample" },
-    hashrate_l: { name: "8hr Sample" },
-    target: { name: "Network Target" },
-    average: { name: "Moving Average" },
-  };
-  var metric = svg.selectAll(".metric")
-      .data(metrics)
-      .enter().append("g")
-      .attr("class", "metric");
-
-  metric.append("path")
-      .attr("class", function(d) { return "line " + d.name; })
-      .attr("d", function(d) { return line(d.values); });      
-
-  metric.append("text")
-      .datum(function(d) { return {name: d.name, value: d.values[d.values.length-1]}; })
-      .attr("class", function(d) { return "pathlabel label-" + d.name; } )
-      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.hashrate) + ")"; })
-      .attr("x", 3)
-      .attr("dy", ".35em")
-      .text(function(d) { return display_config[d.name].name; });
-});
+}
+d3Inter();
+setInterval(d3Inter, 35000);
 })(d3);
 </script>
 <script>
@@ -266,87 +269,92 @@ var svg = d3.select(".productioncost").append("svg")
 
 var btm_cap = 0;
 
-d3.json("data/blocksummary.json", function(error, data) {
-  data = data.data;
-  var costcounter = 0;
-  var moving  = [];
-  var moving_average = 84;
-  data.forEach(function(d,i) {
-	// cost per btm
-	var av_block_time = (d.endtime-d.starttime)/60;
-	var hash_cost_per_second = ((d.hashrate_s/1000000)*0.001175)/86400;
-	d.btm_cost = (av_block_time*hash_cost_per_second)/20;
-	// average
-	btm_cap+=d.btm_cost*60*20;
-	d.average = btm_cap/((i+1)*60*20);
-	// moving average
-	if(moving.length == moving_average) moving.shift();
-	moving.push(d.btm_cost);
-    var moving_total = moving.reduce(function(a, b){ return a + b; });
-    d.moving = moving_total/moving.length;
-    // date
-    d.date = d.endtime*1000;
-  });
-  color.domain(d3.keys(data[0]).filter(function(key) { return key in {btm_cost:0, average:0, moving:0}; }));
-  var metrics = color.domain().map(function(name) {
-    return {
-      name: name,
-      values: data.map(function(d) {
-        return {
-          date: d.date,
-          cost: +d[name]
-        };
-      })
+var d3Inter = function () {
+  d3.json("data/blocksummary.json", function(error, data) {
+    data = data.data;
+    var costcounter = 0;
+    var moving  = [];
+    var moving_average = 84;
+    data.forEach(function(d,i) {
+  	// cost per btm
+  	var av_block_time = (d.endtime-d.starttime)/60;
+  	var hash_cost_per_second = ((d.hashrate_s/1000000)*0.001175)/86400;
+  	d.btm_cost = (av_block_time*hash_cost_per_second)/20;
+  	// average
+  	btm_cap+=d.btm_cost*60*20;
+  	d.average = btm_cap/((i+1)*60*20);
+  	// moving average
+  	if(moving.length == moving_average) moving.shift();
+  	moving.push(d.btm_cost);
+      var moving_total = moving.reduce(function(a, b){ return a + b; });
+      d.moving = moving_total/moving.length;
+      // date
+      d.date = d.endtime*1000;
+    });
+    color.domain(d3.keys(data[0]).filter(function(key) { return key in {btm_cost:0, average:0, moving:0}; }));
+    var metrics = color.domain().map(function(name) {
+      return {
+        name: name,
+        values: data.map(function(d) {
+          return {
+            date: d.date,
+            cost: +d[name]
+          };
+        })
+      };
+    });
+
+    x.domain(d3.extent(data, function(d) { return d.date; }));
+
+    y.domain([
+      d3.min(metrics, function(c) { return d3.min(c.values, function(v) { return v.cost; }); }),
+      d3.max(metrics, function(c) { return d3.max(c.values, function(v) { return v.cost; }); })
+    ]);
+
+    svg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + height + ")")
+        .call(xAxis);
+
+    svg.append("g")
+        .attr("class", "y axis")
+        .call(yAxis)
+      .append("text")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -16)
+        .attr("dy", ".71em")
+        .style("text-anchor", "end")
+        .text("Production Cost (BTC/BTM)");
+
+    var display_config = {
+      btm_cost: { name: "Real Cost" },
+      average: { name: "All Time Average" },
+      moving: { name: "5 Day Average" }
     };
+    var metric = svg.selectAll(".metric")
+        .data(metrics)
+        .enter().append("g")
+        .attr("class", "metric");
+
+    metric.append("path")
+        .attr("class", function(d) { return "line " + d.name; })
+        .attr("d", function(d) { return line(d.values); });      
+
+    metric.append("text")
+        .datum(function(d) { return {name: d.name, value: d.values[d.values.length-1]}; })
+        .attr("class", function(d) { return "pathlabel label-" + d.name; } )
+        .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.cost) + ")"; })
+        .attr("x", 3)
+        .attr("dy", ".35em")
+        .text(function(d) { return display_config[d.name].name; });
   });
-
-  x.domain(d3.extent(data, function(d) { return d.date; }));
-
-  y.domain([
-    d3.min(metrics, function(c) { return d3.min(c.values, function(v) { return v.cost; }); }),
-    d3.max(metrics, function(c) { return d3.max(c.values, function(v) { return v.cost; }); })
-  ]);
-
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
-
-  svg.append("g")
-      .attr("class", "y axis")
-      .call(yAxis)
-    .append("text")
-      .attr("transform", "rotate(-90)")
-      .attr("y", -16)
-      .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Production Cost (BTC/BTM)");
-
-  var display_config = {
-    btm_cost: { name: "Real Cost" },
-    average: { name: "All Time Average" },
-    moving: { name: "5 Day Average" }
-  };
-  var metric = svg.selectAll(".metric")
-      .data(metrics)
-      .enter().append("g")
-      .attr("class", "metric");
-
-  metric.append("path")
-      .attr("class", function(d) { return "line " + d.name; })
-      .attr("d", function(d) { return line(d.values); });      
-
-  metric.append("text")
-      .datum(function(d) { return {name: d.name, value: d.values[d.values.length-1]}; })
-      .attr("class", function(d) { return "pathlabel label-" + d.name; } )
-      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.cost) + ")"; })
-      .attr("x", 3)
-      .attr("dy", ".35em")
-      .text(function(d) { return display_config[d.name].name; });
-});
+}
+d3Inter();
+setInterval(d3Inter, 30000);
 })();
 </script>
 
   </body>
 </html>
+
 
